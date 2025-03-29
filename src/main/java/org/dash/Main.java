@@ -1,12 +1,13 @@
 package org.dash;
 
-import org.dash.service.WSController;
+import org.dash.service.GatewayClient;
 
 public class Main
 {
     public static void main(String[] args)
     {
-        WSController controller = new WSController();
+        GatewayClient client = new GatewayClient();
+        client.start();
 
     }
 
