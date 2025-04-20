@@ -1,8 +1,10 @@
-package org.dash.service;
+package org.dash.client;
 
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class VoiceSessionCache
 {
@@ -45,5 +47,14 @@ public class VoiceSessionCache
         activeSessions.put(userId, new VoiceSession(channelId, ZonedDateTime.now(), muted, defeaned));
     }
 
+    public Set<Entry<String, VoiceSession>> getAll()
+    {
+        return activeSessions.entrySet();
+    }
+
+    public void clear()
+    {
+        activeSessions.clear();
+    }
 
 }

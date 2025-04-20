@@ -2,13 +2,11 @@ package org.dash.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "voice_session")
-public class VoiceSessionUpdateEventEntity
+public class VoiceSessionEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,5 +84,19 @@ public class VoiceSessionUpdateEventEntity
 
     public void setChannelId(String channelId) {
         this.channelId = channelId;
+    }
+
+
+    @Override
+    public String toString() {
+        return "VoiceSessionEntity{" +
+                "id=" + id +
+                ", timestampStart=" + timestampStart +
+                ", timestampEnd=" + timestampEnd +
+                ", userId='" + userId + '\'' +
+                ", channelId='" + channelId + '\'' +
+                ", isUserMuted=" + isUserMuted +
+                ", isUserDefeaned=" + isUserDefeaned +
+                '}';
     }
 }

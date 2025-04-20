@@ -1,5 +1,6 @@
-package org.dash.event.incoming;
+package org.dash.event.annotations;
 
+import org.dash.event.incoming.IncomingEvents;
 import org.springframework.beans.factory.annotation.Qualifier;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +10,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
-public @interface OpcodeEvent
+public @interface GatewayEvent
 {
-    int op();
+    IncomingEvents type();
 }

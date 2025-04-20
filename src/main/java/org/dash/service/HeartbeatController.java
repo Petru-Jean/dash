@@ -1,8 +1,9 @@
 package org.dash.service;
 
 
+import org.dash.client.GatewayClientPipeline;
+import org.dash.event.outgoing.HeartbeatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class HeartbeatController
 
     private void sendHeartbeat()
     {
-        //clientResponseBus.send(new HeartbeatEvent(sequence));
+        gatewayClientPipeline.sendEvent(new HeartbeatEvent(sequence));
     }
 
     public void scheduleHeartbeat()
@@ -59,7 +60,7 @@ public class HeartbeatController
 
     public void setSequence(int sequence)
     {
-        System.out.println("[Heartbeat Controller] Sequence changed to " + sequence);
+//        System.out.println("[Heartbeat Controller] Sequence changed to " + sequence);
         this.sequence = sequence;
     }
 

@@ -27,8 +27,9 @@ public class EventPayload
 
         return new EventPayload(json.getInt("op"),
                 json.opt("d"),
-                json.optIntegerObject("s"),
-                json.optString("t"), json);
+                json.optIntegerObject("s", null),
+                json.optString("t",        null),
+                json);
     }
 
     public static class EventPayloadBuilder
@@ -94,9 +95,6 @@ public class EventPayload
         return name;
     }
 
-    public JSONObject getJson() {
-        return json;
-    }
 
     @Override
     public String toString()

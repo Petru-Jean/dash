@@ -1,8 +1,9 @@
 package org.dash.event.incoming;
 
 import org.dash.entity.MessageCreateEventEntity;
+import org.dash.event.annotations.GatewayEvent;
 import org.dash.model.EventPayload;
-import org.dash.service.GatewayClientPipeline;
+import org.dash.repository.MessageRepository;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +12,16 @@ import org.springframework.stereotype.Component;
 import java.time.ZonedDateTime;
 
 @Component
-@DispatchEvent(name = "MESSAGE_CREATE")
+@GatewayEvent(type = IncomingEvents.MESSAGE_CREATE)
 public class MessageCreateEvent implements IncomingEvent
 {
-    GatewayClientPipeline gatewayClientPipeline;
+
+    MessageRepository repository;
 
     @Autowired
-    public MessageCreateEvent(GatewayClientPipeline gatewayClientPipeline)
+    public MessageCreateEvent(MessageRepository messageRepository)
     {
-        this.gatewayClientPipeline = gatewayClientPipeline;
+        this.repository = messageRepository;
     }
 
     @Override
@@ -56,8 +58,8 @@ public class MessageCreateEvent implements IncomingEvent
             entity.setTimestamp(timestamp);
 
             System.out.println("message create " + content);
-            // Store entity
-            //repository.persist(entity);
+
+            repository.save(entity);
         }
         catch(JSONException ex)
         {

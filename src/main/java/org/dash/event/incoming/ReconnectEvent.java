@@ -1,15 +1,18 @@
 package org.dash.event.incoming;
 
+import org.dash.event.annotations.GatewayEvent;
 import org.dash.model.EventPayload;
-import org.dash.service.GatewayClientPipeline;
+import org.dash.client.GatewayClientPipeline;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@OpcodeEvent(op = 7)
+@GatewayEvent(type = IncomingEvents.RECONNECT)
 public class ReconnectEvent implements  IncomingEvent
 {
     GatewayClientPipeline gatewayClientPipeline;
 
+    @Autowired
     public ReconnectEvent(GatewayClientPipeline gatewayClientPipeline)
     {
         this.gatewayClientPipeline = gatewayClientPipeline;

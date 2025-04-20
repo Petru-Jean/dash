@@ -1,20 +1,23 @@
 package org.dash.event.incoming;
 
 import org.dash.DiscordAPIUtils;
+import org.dash.event.annotations.GatewayEvent;
 import org.dash.model.EventPayload;
 import org.dash.service.AuthService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
 
 @Component
-@DispatchEvent(name = "READY")
+@GatewayEvent(type = IncomingEvents.READY)
 public class ReadyEvent implements  IncomingEvent
 {
     AuthService authService;
 
+    @Autowired
     public ReadyEvent(AuthService authService)
     {
         this.authService = authService;

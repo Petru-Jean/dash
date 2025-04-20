@@ -1,5 +1,6 @@
-package org.dash.service;
+package org.dash.client;
 
+import org.dash.client.GatewayClient;
 import org.dash.event.outgoing.OutgoingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -17,6 +18,7 @@ public class GatewayClientPipeline
 
     public void sendEvent(OutgoingEvent event)
     {
+        System.out.println("[Gateway Pipeline] Outgoing payload: " + event.getPayload().toString());
         gatewayClient.send(event.getPayload().toString());
     }
 

@@ -11,7 +11,7 @@ public class HeartbeatEvent implements OutgoingEvent
     public HeartbeatEvent(int sequenceNumber)
     {
         payload = new EventPayload.EventPayloadBuilder(1).
-                sequence(sequenceNumber).
+                data(sequenceNumber).
                 build();
     }
 

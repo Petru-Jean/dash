@@ -1,22 +1,25 @@
 package org.dash.event.incoming;
 
+import org.dash.event.annotations.GatewayEvent;
 import org.dash.event.outgoing.IdentifyEvent;
 import org.dash.model.EventPayload;
 import org.dash.service.AuthService;
-import org.dash.service.GatewayClientPipeline;
+import org.dash.client.GatewayClientPipeline;
 import org.dash.service.HeartbeatController;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@OpcodeEvent(op = 10)
+@GatewayEvent(type = IncomingEvents.HELLO)
 public class HelloEvent implements IncomingEvent
 {
     HeartbeatController heartbeatController;
     AuthService authService;
     GatewayClientPipeline gatewayClientPipeline;
 
+    @Autowired
     public HelloEvent(HeartbeatController heartbeatController, AuthService authService,
                       GatewayClientPipeline gatewayClientPipeline)
     {
@@ -49,9 +52,9 @@ public class HelloEvent implements IncomingEvent
             return;
         }
 
-        String tk = "";
+        String token = authService.getAuthToken();
 
-        var event = new IdentifyEvent(tk,
+        var event = new IdentifyEvent(token,
                 new IdentifyEvent.ConnectionProperties("Placeholder OS", "Placeholder browser", "Placeholder device"),
                 false,
                 50,
