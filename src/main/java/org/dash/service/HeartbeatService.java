@@ -2,6 +2,7 @@ package org.dash.service;
 
 
 import org.dash.client.GatewayClientPipeline;
+import org.dash.client.WebSocketSubscriber;
 import org.dash.event.outgoing.HeartbeatEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class HeartbeatController
+public class HeartbeatService extends WebSocketSubscriber
 {
     GatewayClientPipeline gatewayClientPipeline;
 
@@ -25,9 +26,8 @@ public class HeartbeatController
     int interval;
     int sequence;
 
-    public HeartbeatController(@Autowired GatewayClientPipeline gatewayClientPipeline)
+    public HeartbeatService(@Autowired GatewayClientPipeline gatewayClientPipeline)
     {
-        //this.clientResponseBus = bus;
         this.gatewayClientPipeline = gatewayClientPipeline;
         this.scheduledFuture   = Optional.empty();
         this.interval = 45000;
@@ -75,4 +75,8 @@ public class HeartbeatController
         this.interval = interval;
     }
 
+    @Override
+    public void onClose(int code, String reason, boolean remote) {
+        cancelHeartbeat();
+    }
 }

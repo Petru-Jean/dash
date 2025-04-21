@@ -2,7 +2,7 @@ package org.dash.event.incoming;
 
 import org.dash.event.annotations.GatewayEvent;
 import org.dash.model.EventPayload;
-import org.dash.service.HeartbeatController;
+import org.dash.service.HeartbeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,18 +10,18 @@ import org.springframework.stereotype.Component;
 @GatewayEvent(type = IncomingEvents.HEARTBEAT_ACK)
 public class HeartbeatAckEvent implements IncomingEvent
 {
-    HeartbeatController heartbeatController;
+    HeartbeatService heartbeatService;
 
     @Autowired
-    public HeartbeatAckEvent(HeartbeatController heartbeatController)
+    public HeartbeatAckEvent(HeartbeatService heartbeatService)
     {
-        this.heartbeatController = heartbeatController;
+        this.heartbeatService = heartbeatService;
     }
 
     @Override
     public void process(EventPayload payload)
     {
-        heartbeatController.scheduleHeartbeat();
+        heartbeatService.scheduleHeartbeat();
     }
 
 }

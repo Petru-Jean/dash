@@ -5,7 +5,7 @@ import org.dash.event.outgoing.IdentifyEvent;
 import org.dash.model.EventPayload;
 import org.dash.service.AuthService;
 import org.dash.client.GatewayClientPipeline;
-import org.dash.service.HeartbeatController;
+import org.dash.service.HeartbeatService;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +15,15 @@ import org.springframework.stereotype.Component;
 @GatewayEvent(type = IncomingEvents.HELLO)
 public class HelloEvent implements IncomingEvent
 {
-    HeartbeatController heartbeatController;
+    HeartbeatService heartbeatService;
     AuthService authService;
     GatewayClientPipeline gatewayClientPipeline;
 
     @Autowired
-    public HelloEvent(HeartbeatController heartbeatController, AuthService authService,
+    public HelloEvent(HeartbeatService heartbeatService, AuthService authService,
                       GatewayClientPipeline gatewayClientPipeline)
     {
-        this.heartbeatController = heartbeatController;
+        this.heartbeatService = heartbeatService;
         this.authService = authService;
         this.gatewayClientPipeline = gatewayClientPipeline;
     }
@@ -43,25 +43,8 @@ public class HelloEvent implements IncomingEvent
                     + ex.getMessage() + " " + ex);
         }
 
-        heartbeatController.updateInterval(interval);
-        heartbeatController.scheduleHeartbeat();
-
-        if(authService.authenticated())
-        {
-            System.out.println("[Hello Event] The current connection does not require authentication");
-            return;
-        }
-
-        String token = authService.getAuthToken();
-
-        var event = new IdentifyEvent(token,
-                new IdentifyEvent.ConnectionProperties("Placeholder OS", "Placeholder browser", "Placeholder device"),
-                false,
-                50,
-                null,
-                53608447);
-
-        gatewayClientPipeline.sendEvent(event);
+        heartbeatService.updateInterval(interval);
+        heartbeatService.scheduleHeartbeat();
 
     }
 

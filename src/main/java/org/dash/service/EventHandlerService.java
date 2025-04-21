@@ -2,22 +2,26 @@ package org.dash.service;
 
 import java.util.*;
 
+import org.dash.client.WebSocketSubscriber;
 import org.dash.event.annotations.GatewayEvent;
 import org.dash.event.incoming.*;
 import org.dash.model.EventPayload;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EventHandler
+public class EventHandlerService extends WebSocketSubscriber
 {
     Map<String, IncomingEvent>  dispatchEvents;
     Map<Integer, IncomingEvent> opcodeEvents;
 
-    public EventHandler(@Autowired List<IncomingEvent> events)
+    HeartbeatService heartbeatService;
+
+    @Autowired
+    public EventHandlerService(List<IncomingEvent> events, HeartbeatService heartbeatService)
     {
+        this.heartbeatService = heartbeatService;
         this.dispatchEvents = new HashMap<>();
         this.opcodeEvents   = new HashMap<>();
 
@@ -55,6 +59,10 @@ public class EventHandler
         int op      = payload.getOpcode();
         String name = payload.getName();
 
+        if(payload.getSequence() != null) {
+            heartbeatService.setSequence(payload.getSequence());
+        }
+
         IncomingEvent event = (op == 0) ? dispatchEvents.get(name) : opcodeEvents.get(op);
 
         if(event == null)
@@ -70,5 +78,6 @@ public class EventHandler
 
         event.process(payload);
     }
+
 
 }

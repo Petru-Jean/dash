@@ -1,6 +1,7 @@
 package org.dash.service;
 
 import org.dash.client.VoiceSessionCache;
+import org.dash.client.WebSocketSubscriber;
 import org.dash.entity.VoiceSessionEntity;
 import org.dash.repository.VoiceRepository;
 import org.json.JSONArray;
@@ -15,15 +16,17 @@ import java.time.ZonedDateTime;
 import java.util.Objects;
 
 @Service
-public class VoiceSessionService
+public class VoiceSessionService extends WebSocketSubscriber
 {
     private VoiceSessionCache cache;
     private VoiceRepository   repository;
+    private AuthService authService;
 
-    public VoiceSessionService(@Autowired VoiceRepository repository)
+    public VoiceSessionService(@Autowired VoiceRepository repository, AuthService authService)
     {
         this.cache = new VoiceSessionCache();
         this.repository = repository;
+        this.authService = authService;
     }
 
     public void cacheExistingSessions(JSONArray sessions)
@@ -34,8 +37,11 @@ public class VoiceSessionService
         });
     }
 
-    public void persistAllAndClearCache()
+    @Override
+    public void onClose(int code, String reason, boolean remote)
     {
+        if(authService.authenticated()) return;
+
         for(var entry : cache.getAll())
         {
             persistSession(entry.getKey(), entry.getValue());
